@@ -5,7 +5,7 @@ import { Col, Row, Container, ListGroup, Badge } from "react-bootstrap";
 
 export default function TodoList() {
 	const [todo, setTodo] = useState({ todos: [] });
-
+	n.url;
 	let valueStorage = allStorage();
 	console.log("values:", valueStorage);
 
