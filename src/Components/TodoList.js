@@ -1,16 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Todo from "./Todo";
 import TodoForm from "./TodoForm";
 import { Col, Row, Container, ListGroup, Badge } from "react-bootstrap";
 
 export default function TodoList() {
-	const [todo, setTodo] = useState({ todos: [] });
-	let valueStorage = allStorage();
-	console.log("values:", valueStorage);
 
-	// setTodo({
-	// 	todos: [valueStorage],
-	// });
+	const [todo, setTodo] = useState({ todos: [] });
+
+	let valueStorage = allStorage();
+
+	useEffect(() => {
+    setTodo({
+			todos: [...valueStorage],
+		});
+  },[]);
 
 	function allStorage() {
 		var values = [],
@@ -27,9 +30,6 @@ export default function TodoList() {
 		setTodo({
 			todos: [...todo.todos, newTodo],
 		});
-		setTimeout(() => {
-			console.log(todo.todos);
-		}, 0);
 		localStorage.setItem(newTodo.id, JSON.stringify(newTodo));
 	}
 
@@ -37,6 +37,7 @@ export default function TodoList() {
 		setTodo({
 			todos: todo.todos.filter(t => t.id !== id),
 		});
+		localStorage.removeItem(id);
 	}
 
 	function update(id, updatedTask) {
@@ -47,6 +48,9 @@ export default function TodoList() {
 			return td;
 		});
 		setTodo({ todos: updatedTodos });
+		let localvalue = JSON.parse(localStorage.getItem(id)) ;
+		localvalue.task = updatedTask;
+		localStorage.setItem(id, JSON.stringify(localvalue))
 	}
 
 	function toggleCompletion(id) {
@@ -57,6 +61,9 @@ export default function TodoList() {
 			return td;
 		});
 		setTodo({ todos: updatedTodos });
+		let localvalue = JSON.parse(localStorage.getItem(id));
+		localvalue.completed = !localvalue.completed;
+		localStorage.setItem(id, JSON.stringify(localvalue));
 	}
 
 	const todos = todo.todos.map(td => {
