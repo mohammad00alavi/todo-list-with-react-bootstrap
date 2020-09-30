@@ -4,16 +4,15 @@ import TodoForm from "./TodoForm";
 import { Col, Row, Container, ListGroup, Badge } from "react-bootstrap";
 
 export default function TodoList() {
-
 	const [todo, setTodo] = useState({ todos: [] });
 
 	let valueStorage = allStorage();
 
 	useEffect(() => {
-    setTodo({
+		setTodo({
 			todos: [...valueStorage],
 		});
-  },[]);
+	}, []);
 
 	function allStorage() {
 		var values = [],
@@ -23,7 +22,10 @@ export default function TodoList() {
 		while (i--) {
 			values.push(JSON.parse(localStorage.getItem(keys[i])));
 		}
-		return values;
+		let newValues = values.sort((a, b) => {
+			return a.index - b.index;
+		});
+		return newValues;
 	}
 
 	function create(newTodo) {
@@ -48,9 +50,9 @@ export default function TodoList() {
 			return td;
 		});
 		setTodo({ todos: updatedTodos });
-		let localvalue = JSON.parse(localStorage.getItem(id)) ;
+		let localvalue = JSON.parse(localStorage.getItem(id));
 		localvalue.task = updatedTask;
-		localStorage.setItem(id, JSON.stringify(localvalue))
+		localStorage.setItem(id, JSON.stringify(localvalue));
 	}
 
 	function toggleCompletion(id) {
@@ -66,7 +68,7 @@ export default function TodoList() {
 		localStorage.setItem(id, JSON.stringify(localvalue));
 	}
 
-	const todos = todo.todos.map(td => {
+	const todos = todo.todos.map((td, index) => {
 		return (
 			<Todo
 				task={td.task}
